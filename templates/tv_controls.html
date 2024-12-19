@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}TV Controls{% endblock %}
+
+{% block content %}
+<div class="card mt-4 shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h2 class="mb-0"><i class="fas fa-tv"></i> TV Controls</h2>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th><i class="fas fa-check-square"></i></th>
+                    <th><i class="fas fa-desktop"></i> Device</th>
+                    <th><i class="fas fa-map-marker-alt"></i> Location</th>
+                    <th><i class="fas fa-power-off"></i> TV Power Status</th>
+                    <th><i class="fas fa-microchip"></i> Raspberry Pi Power Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tv, status in statuses.items() %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="device-checkbox" value="{{ available_tvs[tv] }}">
+                        </td>
+                        <td>{{ tv }}</td>
+                        <td>{{ TV_LOCATIONS[tv] }}</td>
+                        <td>
+                            {% if status['status'] == 'on' %}
+                                <i class="fas fa-power-off text-success"></i> On
+                            {% elif status['status'] == 'off' %}
+                                <i class="fas fa-power-off text-danger"></i> Off
+                            {% else %}
+                                <i class="fas fa-power-off text-warning"></i> Unknown
+                            {% endif %}
+                        </td>
+                        <td id="rpi-status-{{ available_tvs[tv] }}">
+                            <i class="fas fa-spinner fa-spin text-info"></i> Checking...
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Form for TV Actions -->
+        <form id="tv-control-form" onsubmit="submitTVControl(event)">
+            <div class="form-group">
+                <label for="tv-action">Select TV Action:</label>
+                <select id="tv-action" class="form-control">
+                    <option value="on">Turn On</option>
+                    <option value="off">Turn Off</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit TV Action</button>
+        </form>
+
+        <!-- Form for Raspberry Pi Actions -->
+        <form id="rpi-control-form" onsubmit="submitRpiControl(event)" class="mt-4">
+            <div class="form-group">
+                <label for="rpi-action">Select Raspberry Pi Action:</label>
+                <select id="rpi-action" class="form-control">
+                    <option value="reboot">Reboot</option>
+                    <option value="shutdown">Shutdown</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Raspberry Pi Action</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function submitTVControl(event) {
+    event.preventDefault();
+
+    const checkboxes = document.querySelectorAll('.device-checkbox:checked');
+    const action = document.getElementById('tv-action').value;
+
+    const ips = Array.from(checkboxes).map(checkbox => checkbox.value);
+
+    if (ips.length === 0) {
+        alert('Please select at least one TV.');
+        return;
+    }
+
+    ips.forEach(ip => {
+        controlTV(ip, action);
+    });
+}
+
+function submitRpiControl(event) {
+    event.preventDefault();
+
+    const checkboxes = document.querySelectorAll('.device-checkbox:checked');
+    const action = document.getElementById('rpi-action').value;
+
+    const ips = Array.from(checkboxes).map(checkbox => checkbox.value);
+
+    if (ips.length === 0) {
+        alert('Please select at least one Raspberry Pi.');
+        return;
+    }
+
+    ips.forEach(ip => {
+        controlRpi(ip, action);
+    });
+}
+
+function controlTV(ip, action) {
+    fetch(`/tv_${action}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ip: ip })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data.message);
+        alert(data.message);
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+}
+
+function controlRpi(ip, action) {
+    fetch(`/${action}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ ip: ip })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data.message);
+        alert(data.message);
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+}
+
+function updateRaspberryPiStatus() {
+    fetch('/status', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(statuses => {
+        for (const [ip, status] of Object.entries(statuses)) {
+            const statusElement = document.getElementById(`rpi-status-${ip}`);
+            if (status === 'online') {
+                statusElement.innerHTML = '<i class="fas fa-power-off text-success"></i> On';
+            } else if (status === 'offline') {
+                statusElement.innerHTML = '<i class="fas fa-power-off text-danger"></i> Off';
+            } else {
+                statusElement.innerHTML = '<i class="fas fa-power-off text-warning"></i> Unknown';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+}
+
+// 주기적으로 Raspberry Pi 상태 업데이트 (60초마다)
+setInterval(updateRaspberryPiStatus, 60000);
+
+window.onload = updateRaspberryPiStatus;
+</script>
+{% endblock %}

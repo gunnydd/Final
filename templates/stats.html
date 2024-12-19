@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}TV Stats{% endblock %}
+
+{% block content %}
+<div class="card mt-4 shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h2 class="mb-0"><i class="fas fa-chart-bar"></i> TV Stats</h2>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover mt-4">
+            <thead class="thead-light">
+                <tr>
+                    <th><i class="fas fa-tv"></i> TV</th>
+                    <th><i class="fas fa-map-marker-alt"></i> Location</th>
+                    <th><i class="fas fa-power-off"></i> Status</th>
+                    <th><i class="fas fa-file-alt"></i> Current File</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tv, stat in tv_stats %}
+                    <tr>
+                        <td>{{ tv }}</td>
+                        <td>{{ TV_LOCATIONS[tv] }}</td>
+                        <td>
+                            {% if stat['status'] == 'on' %}
+                                <i class="fas fa-power-off text-success"></i> On
+                            {% elif stat['status'] == 'off' %}
+                                <i class="fas fa-power-off text-danger"></i> Off
+                            {% else %}
+                                <i class="fas fa-power-off text-warning"></i> Unknown
+                            {% endif %}
+                        </td>
+                        <td>{{ stat['current_file'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

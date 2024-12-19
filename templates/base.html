@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}Signage Management{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            padding-top: 56px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .card-header h2 {
+            margin-bottom: 0;
+        }
+        .card-equal-height .card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        .card-equal-height .card-body {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .card-equal-height .card-text {
+            flex-grow: 1;
+        }
+        /* 네비게이션 바 배경색 */
+        .navbar-custom {
+            background-color: #001f3f; /* Ultium Cells의 색상 코드 */
+        }
+        /* 네비게이션 바 링크 색상 */
+        .navbar-custom .nav-link {
+            color: white;
+        }
+        /* 네비게이션 바 링크 호버 색상 */
+        .navbar-custom .nav-link:hover {
+            color: #ccc; /* 링크 호버 시 색상 */
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://www.ultiumcell.com" target="_blank">
+            <img src="https://www.ultiumcell.com/media/b9331de9-64ca-4f04-86d6-f9801f92d289/Mj-BQg/Ultium%20Cells%20logos/UltiumCells_VerticalLogo.jpg" alt="Ultium Cells Logo" style="height: 30px;">
+        </a>
+        <a class="navbar-brand ml-2" href="/">Signage Management</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/upload">Upload</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/schedule">Schedule</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/jobs">Jobs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/tv_controls">TV Controls</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/stats">Stats</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/display_emergency">Display Emergency</a>
+                </li>
+                <li class="nav-item">
+                    <form id="logout-form" method="POST" action="{{ url_for('logout') }}">
+                        <button type="submit" class="btn btn-link nav-link">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="mt-4">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

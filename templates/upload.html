@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Upload File{% endblock %}
+
+{% block content %}
+<div class="card mt-4 shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h2 class="mb-0">Upload File</h2>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-warning" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> Note: If the file size is large, the upload process might take longer than expected.
+        </div>
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group mb-4">
+                <label for="file">Select file:</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="file" name="file" required>
+                    <label class="custom-file-label" for="file"><i class="fas fa-upload"></i> Choose file</label>
+                </div>
+            </div>
+            <div class="form-group mb-4">
+                <label>Select TVs:</label>
+                <div class="row">
+                    <div class="col-lg-5 mb-3 mb-lg-0">
+                        <label><i class="fas fa-tv"></i> Available TVs</label>
+                        <select multiple class="form-control" id="available_tvs">
+                            {% for tv in available_tvs %}
+                                <option value="{{tv}}">{{ tv }} ({{ TV_LOCATIONS[tv] }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-lg-2 d-flex flex-column align-items-center justify-content-center">
+                        <button type="button" class="btn btn-outline-primary mb-2" id="add_tv"><i class="fas fa-angle-right"></i></button>
+                        <button type="button" class="btn btn-outline-primary" id="remove_tv"><i class="fas fa-angle-left"></i></button>
+                    </div>
+                    <div class="col-lg-5">
+                        <label><i class="fas fa-tv"></i> Selected TVs</label>
+                        <select multiple class="form-control" id="selected_tvs" name="tvs" required>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block mt-4"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('add_tv').addEventListener('click', function() {
+        var availableTVs = document.getElementById('available_tvs');
+        var selectedTVs = document.getElementById('selected_tvs');
+        while (availableTVs.selectedOptions.length > 0) {
+            selectedTVs.appendChild(availableTVs.selectedOptions[0]);
+        }
+    });
+
+    document.getElementById('remove_tv').addEventListener('click', function() {
+        var availableTVs = document.getElementById('available_tvs');
+        var selectedTVs = document.getElementById('selected_tvs');
+        while (selectedTVs.selectedOptions.length > 0) {
+            availableTVs.appendChild(selectedTVs.selectedOptions[0]);
+        }
+    });
+
+    // Show the selected file name in the label
+    document.querySelector('.custom-file-input').addEventListener('change', function(e) {
+        var fileName = document.getElementById("file").files[0].name;
+        var nextSibling = e.target.nextElementSibling;
+        nextSibling.innerText = fileName;
+    });
+});
+</script>
+{% endblock %}

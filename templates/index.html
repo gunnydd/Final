@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center mt-4">
+    <div class="container">
+        <h1 class="display-4">Welcome to Signage Management</h1>
+        <p class="lead">Efficiently manage your digital signage with ease and style.</p>
+        <hr class="my-4">
+        <p>Access various features using the navigation bar or the quick links below.</p>
+        <div class="row mt-4 card-equal-height">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-upload fa-3x mb-3"></i>
+                        <h5 class="card-title">Upload Content</h5>
+                        <p class="card-text">Upload your presentations and media files to the system.</p>
+                        <a href="/upload" class="btn btn-primary mt-auto">Upload</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-alt fa-3x mb-3"></i>
+                        <h5 class="card-title">Schedule</h5>
+                        <p class="card-text">Schedule presentations to be displayed at specific times.</p>
+                        <a href="/schedule" class="btn btn-primary mt-auto">Schedule</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-tasks fa-3x mb-3"></i>
+                        <h5 class="card-title">Jobs</h5>
+                        <p class="card-text">View and manage all scheduled jobs.</p>
+                        <a href="/jobs" class="btn btn-primary mt-auto">Jobs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4 card-equal-height">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-tv fa-3x mb-3"></i>
+                        <h5 class="card-title">TV Controls</h5>
+                        <p class="card-text">Control and monitor the status of all connected TVs.</p>
+                        <a href="/tv_controls" class="btn btn-primary mt-auto">TV Controls</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-bar fa-3x mb-3"></i>
+                        <h5 class="card-title">Stats</h5>
+                        <p class="card-text">View statistics and performance metrics.</p>
+                        <a href="/stats" class="btn btn-primary mt-auto">Stats</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                        <h5 class="card-title">Display Emergency</h5>
+                        <p class="card-text">Send emergency messages to all displays.</p>
+                        <a href="/display_emergency" class="btn btn-danger mt-auto">Emergency</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

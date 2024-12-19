@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule File{% endblock %}
+
+{% block content %}
+<div class="card mt-4">
+    <div class="card-header bg-primary text-white">
+        <h2 class="mb-0">Schedule File</h2>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Select file:</label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="file" name="file">
+                    <label class="custom-file-label" for="file"><i class="fas fa-upload"></i> Choose file</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Select TVs:</label>
+                <div class="row">
+                    <div class="col">
+                        <label><i class="fas fa-tv"></i> Available TVs</label>
+                        <select multiple class="form-control" id="available_tvs">
+                            {% for tv in available_tvs %}
+                                <option value="{{tv}}">{{ tv }} ({{ TV_LOCATIONS[tv] }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col d-flex flex-column align-items-center justify-content-center">
+                        <button type="button" class="btn btn-primary mb-2" id="add_tv"><i class="fas fa-angle-right"></i></button>
+                        <button type="button" class="btn btn-primary" id="remove_tv"><i class="fas fa-angle-left"></i></button>
+                    </div>
+                    <div class="col">
+                        <label><i class="fas fa-tv"></i> Selected TVs</label>
+                        <select multiple class="form-control" id="selected_tvs" name="tvs">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="display_date">Display Date:</label>
+                <input type="date" class="form-control" id="display_date" name="display_date">
+            </div>
+            <div class="form-group">
+                <label for="display_time">Display Time:</label>
+                <input type="time" class="form-control" id="display_time" name="display_time">
+            </div>
+            <button type="submit" class="btn btn-primary">Schedule</button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('add_tv').addEventListener('click', function() {
+        var availableTVs = document.getElementById('available_tvs');
+        var selectedTVs = document.getElementById('selected_tvs');
+        while (availableTVs.selectedOptions.length > 0) {
+            selectedTVs.appendChild(availableTVs.selectedOptions[0]);
+        }
+    });
+
+    document.getElementById('remove_tv').addEventListener('click', function() {
+        var availableTVs = document.getElementById('available_tvs');
+        var selectedTVs = document.getElementById('selected_tvs');
+        while (selectedTVs.selectedOptions.length > 0) {
+            availableTVs.appendChild(selectedTVs.selectedOptions[0]);
+        }
+    });
+
+    // Show the selected file name in the label
+    document.querySelector('.custom-file-input').addEventListener('change', function(e) {
+        var fileName = document.getElementById("file").files[0].name;
+        var nextSibling = e.target.nextElementSibling;
+        nextSibling.innerText = fileName;
+    });
+});
+</script>
+{% endblock %}
